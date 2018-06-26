@@ -1,7 +1,7 @@
 el7_cockpit
 =========
 
-A role to install and configure Cockpit on an EL7 host, including optional configuration of non-standard port,
+A role to install and configure Cockpit (https://cockpit-project.org/) on an EL7 host, including optional configuration of non-standard port,
 
 Requirements
 ------------

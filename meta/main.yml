@@ -1,6 +1,6 @@
 galaxy_info:
   author: dotmjs
-  description: dotmjs
+  description: Role to configure Cockpit (https://cockpit-project.org/) on EL7 systems
 
   license: BSD
 
@@ -13,3 +13,4 @@ galaxy_info:
 
   galaxy_tags:
   - cockpit
+  - management
