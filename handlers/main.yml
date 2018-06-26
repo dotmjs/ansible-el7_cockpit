@@ -1,2 +1,3 @@
----
-# handlers file for dotmjs.el7_cockpit
+- name: Restart cockpit.socket and daemon-reload systemd
+  systemd: daemon_reload='yes' name="cockpit.socket" state="restarted"
+  listen: Restart cockpit

@@ -1,2 +1,49 @@
----
-# tasks file for dotmjs.el7_cockpit
+# Install cockpit
+- name: Install Cockpit
+  yum: name="cockpit" state=latest
+  with_items:
+  - cockpit
+
+# Install additional cockpit packages
+- name: Install additional Cockpit packages
+  yum: name="{{ item }}" state=latest
+  with_items: "{{ cockpit_packages }}"
+
+- block:
+  - name: Create systemd override location for Cockpit port
+    file: path="/etc/systemd/system/cockpit.socket.d/" state=directory
+    notify:
+    - Restart cockpit
+
+  - name: Adjust Cockpit port if specified
+    template: src="cockpit_listen.conf.j2" dest="/etc/systemd/system/cockpit.socket.d/listen.conf"
+    notify:
+    - Restart cockpit
+
+  - name: Install policycoreutils-python to adjust SELinux
+    yum: name=policycoreutils-python state=latest
+
+  - name: Adjust SELinux for Cockpit port
+    seport:
+      ports: "{{ cockpit_port }}"
+      proto: tcp
+      setype: websm_port_t
+      state: present
+    notify:
+    - Restart cockpit
+
+  - name: Enable custom Cockpit port through firewalld
+    firewalld: port="{{ cockpit_port }}/tcp" immediate=yes permanent=yes state=enabled
+    notify:
+    - Restart cockpit
+
+  when: cockpit_port|default(9090) != 9090
+
+- name: Enable standard Cockpit service through firewalld
+  firewalld: service="cockpit" immediate=yes permanent=yes state=enabled
+  when: cockpit_port|default(9090) == 9090
+
+- meta: flush_handlers
+
+- name: Enable and start Cockpit
+  service: name="cockpit.socket" enabled="yes" state="started"

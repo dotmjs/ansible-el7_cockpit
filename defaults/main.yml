@@ -1,2 +1,7 @@
----
-# defaults file for dotmjs.el7_cockpit
+cockpit_packages:
+- cockpit-dashboard
+- cockpit-pcp
+- cockpit-shell
+- cockpit-storaged
+- cockpit-system
+- cockpit-packagekit
